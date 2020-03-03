@@ -64,9 +64,8 @@ table th {
 }
 
 
-th,
-td:first-child {
-    background: #2d6da8;
+th {
+    background-color: #2d6da8;
     color: white;
     padding: 10px 20px;
 }
@@ -79,7 +78,7 @@ td {
 }
 
 td {
-    background: #D8E6F3;
+    /* background-color: #D8E6F3; */
 }
 
 th:first-child,

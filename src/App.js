@@ -28,7 +28,7 @@ const App = () => {
 
     const [editing, setEditing] = useState(false)
 
-    const initialFormState = { id: null, name: '', surname: '', patronymic: '', birth: '', phone: '', emails: '', specialty: '', group: '' }
+    const initialFormState = { id: null, name: '', count: '', status: 'купить' }
     const [currentUser, setCurrentUser] = useState(initialFormState)
 
     const addUser = user => {
@@ -40,13 +40,8 @@ const App = () => {
         db.collection("usersData").doc(`${user.id}`).set({
             id: user.id,
             name: user.name,
-            surname: user.surname,
-            patronymic: user.patronymic,
-            birth: user.birth,
-            phone: user.phone,
-            emails: user.emails,
-            specialty: user.specialty,
-            group: user.group
+            count: user.count,
+            status: user.status,
         })
     }
 
@@ -62,13 +57,8 @@ const App = () => {
         db.collection("usersData").doc(`${id}`).update({
             id: updatedUser.id,
             name: updatedUser.name,
-            surname: updatedUser.surname,
-            patronymic: updatedUser.patronymic,
-            birth: updatedUser.birth,
-            phone: updatedUser.phone,
-            emails: updatedUser.emails,
-            specialty: updatedUser.specialty,
-            group: updatedUser.group
+            count: updatedUser.count,
+            status: updatedUser.status,
         })
     }
 
@@ -77,23 +67,21 @@ const App = () => {
         setCurrentUser({
             id: user.id,
             name: user.name,
-            surname: user.surname,
-            patronymic: user.patronymic,
-            birth: user.birth,
-            phone: user.phone,
-            emails: user.emails,
-            specialty: user.specialty,
-            group: user.group
+            count: user.count,
+            status: user.status,
         })
     }
 
     // Сортировка
-    const [sortConfig, setSortConfig] = useState({ sort: 'asc', sortField: 'surname' })
+    const [sortConfig, setSortConfig] = useState({ sort: 'asc', sortField: 'status' })
 
     const onSort = sortField => {
         const cloneData = users.concat() // чтобы не менялся state.data в состоянии компонента
         const sortType = sortConfig.sort === 'asc' ? 'desc' : 'asc'
+        // const test = _.groupBy(cloneData, sortField, sortType)
         const orderedData = _.orderBy(cloneData, sortField, sortType) //передаем копию нашего массива, поле по которому мы сортируем и направление - sortType 
+
+        // const orderedData = _.orderBy(test, sortField, sortType) //передаем копию нашего массива, поле по которому мы сортируем и направление - sortType 
 
         setUsers(orderedData)
         setSortConfig({ sort: sortType, sortField })
@@ -102,19 +90,19 @@ const App = () => {
     return (
         <div>
             <header>
-                <h1>shkolenko185</h1>
+                <h1>pincher</h1>
                 <nav>
                     <NavLink exact to="/" activeClassName="activeLink">Главная</NavLink>
-                    <NavLink to="/students" activeClassName="activeLink">Студенты</NavLink>
-                    <NavLink to="/add-student" activeClassName="activeLink">Добавить студента</NavLink>
+                    <NavLink to="/purchases" activeClassName="activeLink">Покупки</NavLink>
+                    <NavLink to="/add-purchase" activeClassName="activeLink">Добавить покупку</NavLink>
                 </nav>
             </header>
             <Route exact path="/" render={() => <Information />}
             />
-            <Route exact path="/add-student" render={() =>
+            <Route exact path="/add-purchase" render={() =>
                 <AddUserForm addUser={addUser} />}
             />
-            <Route exact path="/edit-student" render={() =>
+            <Route exact path="/edit-purchase" render={() =>
                 <EditUserForm
                     editing={editing}
                     setEditing={setEditing}
@@ -123,10 +111,11 @@ const App = () => {
                     deleteUser={deleteUser}
                 />}
             />
-            <Route exact path="/students" render={() =>
+            <Route exact path="/purchases" render={() =>
                 <UserTable
                     users={users}
                     deleteUser={deleteUser}
+                    updateUser={updateUser}
                     editRow={editRow}
                     onSort={onSort}
                     sort={sortConfig.sort}

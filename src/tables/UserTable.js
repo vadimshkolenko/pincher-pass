@@ -4,92 +4,123 @@ import Fuse from 'fuse.js'
 
 const UserTable = props => {
 
-    const handleDeleteUser = id => {
-        props.deleteUser(id)
-    }
+  const handleDeleteUser = id => {
+    props.deleteUser(id)
+  }
 
-    // Поиск/фильтр
+  // Поиск/фильтр
 
-    const [searchString, setSearchString] = useState('')
-    const [filteredTable, setFilteredTable] = useState(props.users)
-    const now = new Date()
+  const [searchString, setSearchString] = useState('')
+  const [filteredTable, setFilteredTable] = useState(props.users)
+  const now = new Date()
 
-    const onChangeSearch = e => {
-        const { value } = e.target
-        setSearchString(value)
-    }
+  const statusChange = (event) => {
+    // event.preventDefault()
+    // if (event.target.value.status === 'не куплено') {
+    //     event.target.value.status = 'куплено'
+    // } else {
+    //     event.target.value.status = 'не куплено'
+    // }
+  }
 
-    const filterTable = (table, filter) => {
-        if (!filter) return table
+  const colorStatus = (status) => {
+    if (status === 'куплено') {
+      return { backgroundColor: 'green' }
+    } else return { backgroundColor: 'white' }
+  }
 
-        const searchOptions = {
-            shouldSort: true,
-            threshold: 0.6,
-            location: 0,
-            distance: 100,
-            maxPatternLength: 0,
-            minMatchCharLength: 1,
-            keys: ['specialty', 'group']
-        }
+  // const onChangeSearch = e => {
+  //   const { value } = e.target
+  //   setSearchString(value)
+  // }
 
-        const fuse = new Fuse(table, searchOptions)
-        const result = fuse.search(filter)
+  // const filterTable = (table, filter) => {
+  //   if (!filter) return table
 
-        return result
-    }
+  //   const searchOptions = {
+  //     shouldSort: true,
+  //     threshold: 0.6,
+  //     location: 0,
+  //     distance: 100,
+  //     maxPatternLength: 0,
+  //     minMatchCharLength: 1,
+  //     keys: ['specialty', 'group']
+  //   }
 
-    useEffect(() => {
-        setFilteredTable(filterTable(props.users, searchString))
-    }, [searchString, props.users])
+  //   // const fuse = new Fuse(table, searchOptions)
+  //   // const result = fuse.search(filter)
 
-    return (
-        <div>
-            <input type="text" value={searchString} onChange={onChangeSearch} id="search" placeholder="Поиск..." />
-            <table>
-                <thead>
-                    <tr>
-                        <th onClick={() => props.onSort('surname')}>
-                            ФИО {props.sortField === 'surname' ? (props.sort === 'asc' ? <small>&uarr;</small> : <small>&darr;</small>) : null}
-                        </th>
-                        <th>
-                            Группа
-                        </th>
-                        <th>
-                            Направление
-                        </th>
-                        <th colSpan={1}></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {filteredTable.length > 0 ? (
-                        filteredTable.map(user => (
-                            <tr key={user.id}>
-                                <td data-label="ФИО">{`${user.surname} ${user.name[0]}.${user.patronymic[0]}.`}</td>
-                                <td data-label="Группа">{user.group}</td>
-                                <td data-label="Направление">{user.specialty}</td>
-                                <td>
-                                    <NavLink to="/edit-student">
-                                        <button
-                                            className="button muted-button"
-                                            onClick={() => props.editRow(user)}
-                                        >&#9998;</button>
-                                    </NavLink>
-                                    <button
-                                        className="button muted-button"
-                                        onClick={() => handleDeleteUser(user.id)}
-                                    >&#10005;</button>
-                                </td>
-                            </tr>
-                        ))
-                    ) : (
-                            <tr>
-                                <td colSpan={4}>Нет записей</td>
-                            </tr>
-                        )}
-                </tbody>
-            </table>
-        </div>
-    )
+  //   // return result
+  // }
+
+  // useEffect(() => {
+  //   setFilteredTable(filterTable(props.users, searchString))
+  // }, [searchString, props.users])
+
+  return (
+    <div>
+      {/* <input type="text" value={searchString} onChange={onChangeSearch} id="search" placeholder="Поиск..." /> */}
+      <table>
+        <thead>
+          <tr>
+            <th onClick={() => props.onSort('name')}>
+              Наименование {props.sortField === 'name' ? (props.sort === 'asc' ? <small>&uarr;</small> : <small>&darr;</small>) : null}
+            </th>
+            <th>
+              Кол-во
+            </th>
+            <th onClick={() => props.onSort('status')}>
+              Статус {props.sortField === 'status' ? (props.sort === 'asc' ? <small>&uarr;</small> : <small>&darr;</small>) : null}
+            </th>
+            <th colSpan={1}></th>
+          </tr>
+        </thead>
+        <tbody>
+          {props.users.length > 0 ? (
+            props.users.map(user => (
+              <tr key={user.id} style={colorStatus(user.status)}>
+                <td data-label="Наименование">{user.name}</td>
+                <td data-label="Кол-во">{user.count}</td>
+                <td data-label="Статус">
+                  <input
+                    type="button"
+                    value={user.status}
+                    onClick={(event) => {
+                      event.preventDefault()
+                      if (event.target.value === 'купить') {
+                        event.target.value = 'куплено'
+                        props.updateUser(user.id, { ...user, status: event.target.value })
+                      } else {
+                        event.target.value = 'купить'
+                        props.updateUser(user.id, { ...user, status: event.target.value })
+                      }
+                    }
+                    }
+                  />
+                </td>
+                <td>
+                  <NavLink to="/edit-purchase">
+                    <button
+                      className="button muted-button"
+                      onClick={() => props.editRow(user)}
+                    >&#9998;</button>
+                  </NavLink>
+                  <button
+                    className="button muted-button"
+                    onClick={() => handleDeleteUser(user.id)}
+                  >&#10005;</button>
+                </td>
+              </tr>
+            ))
+          ) : (
+              <tr>
+                <td colSpan={4}>Нет записей</td>
+              </tr>
+            )}
+        </tbody>
+      </table>
+    </div>
+  )
 
 }
 
