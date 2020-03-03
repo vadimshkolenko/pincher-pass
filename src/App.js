@@ -35,10 +35,7 @@ const App = () => {
     const [currentUser, setCurrentUser] = useState(initialFormState)
 
     const addUser = user => {
-
-        // if (users.length > 0) {
-        //     user.id = users[users.length - 1].id + 1
-        // } else user.id = 1
+        
         user.id = uuidv4()
 
         db.collection("usersData").doc(`${user.id}`).set({
@@ -84,10 +81,6 @@ const App = () => {
         const bough = _.orderBy(cloneData.filter(purchase => purchase.status === 'куплено'), sortField, sortType)
         const buy = _.orderBy(cloneData.filter(purchase => purchase.status === 'купить'), sortField, sortType)
         const sortType = sortConfig.sort === 'asc' ? 'desc' : 'asc'
-        // const orderedData = _.groupBy(_.orderBy(cloneData, sortField, sortType), 'status', sortType)
-        // const orderedData = _.orderBy(cloneData, sortField, sortType) //передаем копию нашего массива, поле по которому мы сортируем и направление - sortType 
-
-        // const orderedData2 = _.groupBy(test, 'status', sortType) //передаем копию нашего массива, поле по которому мы сортируем и направление - sortType 
 
         setUsers(buy.concat(bough))
         setSortConfig({ sort: sortType, sortField })
