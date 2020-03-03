@@ -78,8 +78,10 @@ const App = () => {
 
     const onSort = sortField => {
         const cloneData = users.concat() // чтобы не менялся state.data в состоянии компонента
-        const bough = _.orderBy(cloneData.filter(purchase => purchase.status === 'куплено'), sortField, sortType)
-        const buy = _.orderBy(cloneData.filter(purchase => purchase.status === 'купить'), sortField, sortType)
+        // const bough = _.orderBy(cloneData.filter(purchase => purchase.status === 'куплено'), sortField, sortType)
+        // const buy = _.orderBy(cloneData.filter(purchase => purchase.status === 'купить'), sortField, sortType)
+        const bough = cloneData.filter(purchase => purchase.status === 'куплено').reverse()
+        const buy = cloneData.filter(purchase => purchase.status === 'купить').reverse()
         const sortType = sortConfig.sort === 'asc' ? 'desc' : 'asc'
 
         setUsers(buy.concat(bough))
