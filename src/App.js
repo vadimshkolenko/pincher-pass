@@ -22,7 +22,10 @@ const App = () => {
                 id: doc.id,
                 ...doc.data()
             }))
-            setUsers(_.orderBy(usersData, sortConfig.sortField, 'asc'))
+            const bough = _.orderBy(usersData.filter(purchase => purchase.status === 'куплено'), 'name', 'asc')
+            const buy = _.orderBy(usersData.filter(purchase => purchase.status === 'купить'), 'name', 'asc')
+            setUsers(buy.concat(bough))
+            setUsers(_.orderBy(buy.concat(bough), sortConfig.sortField, 'asc'))
         })
     }, [])
 
@@ -77,13 +80,17 @@ const App = () => {
 
     const onSort = sortField => {
         const cloneData = users.concat() // чтобы не менялся state.data в состоянии компонента
+        const bough = _.orderBy(cloneData.filter(purchase => purchase.status === 'куплено'), sortField, sortType)
+        // console.log(bough)
+        const buy = _.orderBy(cloneData.filter(purchase => purchase.status === 'купить'), sortField, sortType)
+        console.log(buy)
         const sortType = sortConfig.sort === 'asc' ? 'desc' : 'asc'
-        // const test = _.groupBy(cloneData, sortField, sortType)
-        const orderedData = _.orderBy(cloneData, sortField, sortType) //передаем копию нашего массива, поле по которому мы сортируем и направление - sortType 
+        // const orderedData = _.groupBy(_.orderBy(cloneData, sortField, sortType), 'status', sortType)
+        // const orderedData = _.orderBy(cloneData, sortField, sortType) //передаем копию нашего массива, поле по которому мы сортируем и направление - sortType 
 
-        // const orderedData = _.orderBy(test, sortField, sortType) //передаем копию нашего массива, поле по которому мы сортируем и направление - sortType 
+        // const orderedData2 = _.groupBy(test, 'status', sortType) //передаем копию нашего массива, поле по которому мы сортируем и направление - sortType 
 
-        setUsers(orderedData)
+        setUsers(buy.concat(bough))
         setSortConfig({ sort: sortType, sortField })
     }
 
