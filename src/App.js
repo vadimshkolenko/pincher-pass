@@ -8,6 +8,7 @@ import { Route, NavLink } from 'react-router-dom';
 import './firebaseConfig/firebaseConfig'
 import * as firebase from 'firebase'
 import _ from 'lodash'
+import { v4 as uuidv4 } from 'uuid';
 
 
 
@@ -24,7 +25,6 @@ const App = () => {
             }))
             const bough = _.orderBy(usersData.filter(purchase => purchase.status === 'куплено'), 'name', 'asc')
             const buy = _.orderBy(usersData.filter(purchase => purchase.status === 'купить'), 'name', 'asc')
-            setUsers(buy.concat(bough))
             setUsers(_.orderBy(buy.concat(bough), sortConfig.sortField, 'asc'))
         })
     }, [])
@@ -36,9 +36,10 @@ const App = () => {
 
     const addUser = user => {
 
-        if (users.length > 0) {
-            user.id = users[users.length - 1].id + 1
-        } else user.id = 1
+        // if (users.length > 0) {
+        //     user.id = users[users.length - 1].id + 1
+        // } else user.id = 1
+        user.id = uuidv4()
 
         db.collection("usersData").doc(`${user.id}`).set({
             id: user.id,
@@ -81,9 +82,7 @@ const App = () => {
     const onSort = sortField => {
         const cloneData = users.concat() // чтобы не менялся state.data в состоянии компонента
         const bough = _.orderBy(cloneData.filter(purchase => purchase.status === 'куплено'), sortField, sortType)
-        // console.log(bough)
         const buy = _.orderBy(cloneData.filter(purchase => purchase.status === 'купить'), sortField, sortType)
-        console.log(buy)
         const sortType = sortConfig.sort === 'asc' ? 'desc' : 'asc'
         // const orderedData = _.groupBy(_.orderBy(cloneData, sortField, sortType), 'status', sortType)
         // const orderedData = _.orderBy(cloneData, sortField, sortType) //передаем копию нашего массива, поле по которому мы сортируем и направление - sortType 

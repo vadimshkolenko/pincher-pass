@@ -69,7 +69,7 @@ const UserTable = props => {
             <th>
               Кол-во
             </th>
-            <th onClick={() => props.onSort('status')}>
+            <th>
               Статус
             </th>
             <th colSpan={1}></th>
