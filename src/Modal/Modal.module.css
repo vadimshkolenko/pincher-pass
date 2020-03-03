@@ -1,0 +1,90 @@
+* {
+    padding: 0;
+    margin: 0;
+}
+
+@keyframes bounce {
+    0% {
+        margin-top: -2000px;
+    }
+
+    70% {
+        margin-top: 30px;
+    }
+
+    90% {
+        margin-top: -10px;
+    }
+
+    100% {
+        margin-top: 0px;
+    }
+}
+
+.modal {
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.content {
+    width: 300px;
+    height: 150px;
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    background-color: white;
+    animation-name: bounce;
+    animation-duration: 0.6s;
+    border-radius: 8px;
+}
+
+.close {
+    position: absolute;
+    top: 5px;
+    left: 15px;
+    text-decoration: none;
+    font-size: 40px;
+    font-weight: 100;
+    color: black;
+
+    display: block;
+    width: 20px;
+    height: 20px;
+
+    padding: 0;
+    border: none;
+    font: inherit;
+    color: inherit;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+.text {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    vertical-align: middle;
+}
+
+@media screen and (min-width: 0px) and (max-width: 620px) {
+    .content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+    }
+
+    .close {
+        top: -10px;
+        right: 14px;
+    }
+}
